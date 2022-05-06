@@ -1,3 +1,5 @@
+Hello there
+
 # Diagnostics project
 
 Scripts go in the `scripts` directory.
