@@ -8,6 +8,7 @@ Run as:
 import os
 import sys
 import hashlib
+import glob
 
 
 def file_hash(filename):
@@ -23,9 +24,9 @@ def file_hash(filename):
     hash : str
         SHA1 hexadecimal hash string for contents of `filename`.
     """
-    # Open the file, read contents as bytes.
-    # Calculate, return SHA1 has on the bytes from the file.
-    raise NotImplementedError('This is just a template -- you are expected to code this.')
+    with open(filename, 'rb') as fobj:
+        file_bytes = fobj.read()
+    return hashlib.sha1(file_bytes).hexdigest()
 
 
 def validate_data(data_directory):
@@ -50,11 +51,24 @@ def validate_data(data_directory):
         ``hash_list.txt`` file.
     """
     # Read lines from ``hash_list.txt`` file.
-    # Split into SHA1 hash and filename
-    # Calculate actual hash for given filename.
-    # If hash for filename is not the same as the one in the file, raise
-    # ValueError
-    raise NotImplementedError('This is just a template -- you are expected to code this.')
+    hash_fname = glob.glob(os.path.join(data_directory, "group-0?", "hash_list.txt"), recursive=True)
+    for hash_file in hash_fname:  
+        with open(hash_file, 'rt') as f:
+            hash_list = f.read().split()
+
+        # Split into SHA1 hash and filename
+        hashes = hash_list[0::2]
+        fnames = hash_list[1::2]
+        
+        for i in range(len(fnames)):
+            # Calculate actual hash for given filename.
+            filename = os.path.join(data_directory, fnames[i])
+            actual_hash = file_hash(filename)
+
+            # If hash for filename is not the same as the one in the file, raise
+            # ValueError
+            if actual_hash != hashes[i]:
+                raise ValueError(f'hash value for {fnames[i]} does not match hash value recorded in {hash_file}.')
 
 
 def main():
