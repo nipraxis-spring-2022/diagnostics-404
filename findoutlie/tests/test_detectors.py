@@ -13,12 +13,10 @@ import os.path as op
 import sys
 
 MY_DIR = op.dirname(__file__)
-
-# Here you should add the directory containing the findoutlie
-# directory to the Python path.
-# Hint: sys.path
-# Hint: see the solutions if you are stuck.
-# +++your code here+++
+MOD_DIR = op.join(MY_DIR, '..')
+REPO_DIR = op.join(MOD_DIR, '..')
+sys.path.append(MOD_DIR)
+sys.path.append(REPO_DIR)
 
 import numpy as np
 
